@@ -1,18 +1,17 @@
-let whiteSpaceStream = "   \t\n\t\n \t\n\n\n"; // whitespaceStream @codeCore
+let whiteSpaceStream = "   \t\n\t\n \t\n\n\n";
 // sssllssttlssstltsssslstlstslsssststsltsstlttttllll
 
 const stack = [];
 
-// Stack Manipulation funcs:
+// Stack Manipulation functions:
 const pushN = (currentIndex) => {
   console.log("We made it to push N DAWGH");
-  currentIndex += 1;
+  currentIndex += 1; // <------------------------------------------------------------ Fix this
   const objectThing = getNum(currentIndex);
   const binaryArrToPush = objectThing.array;
   stack.push(binaryArrToPush);
 
   return objectThing.index;
-  // let numToPush = getNum(currentIndex);
 };
 
 const duplicateTopStackValue = () => {
@@ -105,7 +104,6 @@ const popValueJumpToLabelNIfValueNegative = () => {
 // Start at root for each new command, hit a leaf = new  command, start at root again
 const tokenTrie = {
   " ": {
-    // Stack Manipulation shit
     " ": pushN,
     "\t": {
       " ": duplicateNthValueOnStackAndPushOntoStack,
@@ -121,32 +119,26 @@ const tokenTrie = {
   },
   "\t": {
     " ": {
-      // Arithmetic
       " ": {
         "\t": popTwoNumsSubtractThemThenPush,
         " ": popTwoNumsAddThemThenPush,
         "\n": popTwoNumsMultiplyThenPush,
       },
       "\t": {
-        // tokenTrie["\t"["\t"[" "]]]
         " ": popTwoNumsDivideThenPush,
         // "\n": {},
         "\t": popTwoNumsModuloThenPush,
       },
-      // end arithmetic
       // "\n": {},
       // "\t": {},
       // "\n": {},
     },
     "\t": {
-      // Heap Access
       " ": popTwoNumsStoreAAtAddressB,
       "\t": popAPushValueAtAOnStack,
-      // end Heap Access
       // "\n": {},
     },
     "\n": {
-      // Input/ Output
       " ": {
         " ": popValueAndOutputAsChar,
         "\t": popValueAndOutputAsNum,
@@ -158,7 +150,6 @@ const tokenTrie = {
     },
   },
   "\n": {
-    // Flow Control
     " ": {
       " ": makeLocationWithLabelN,
       "\t": callSubroutineAtLabelN,
@@ -179,7 +170,6 @@ function getLabel() {
 }
 
 function getNum(currentIndex) {
-  // getNum @cdboiuk
   if (whiteSpaceStream[currentIndex] === "\n") {
     console.log(
       `ERROR: this number is just a terminal character! \n
@@ -190,7 +180,6 @@ function getNum(currentIndex) {
   }
   const binArr = [];
   const sign = whiteSpaceStream[currentIndex];
-  let terminalFlag = false;
 
   if (sign === "\t") {
     binArr.push("-");
@@ -198,7 +187,7 @@ function getNum(currentIndex) {
     binArr.push("+");
   }
 
-  currentIndex++;
+  currentIndex++; // <------------------------------------------------------------ Fix this
   // iterate through the stream from our index and build a binary string array
   // until we reach the terminal character
   for (
@@ -231,27 +220,17 @@ function getNum(currentIndex) {
 }
 
 function whitespace(stream) {
-  // @turing whitespace
-  let currentNode = tokenTrie; // CurrentNode @minsin
+  let currentNode = tokenTrie;
 
-  // go through stream char by char to build/ token
-  for (
-    let charPointer = 0; // char_pointer @codeCore
-    charPointer <= stream.length - 1;
-    charPointer++
-  ) {
+  // go through stream char by char to find token in tokenTrie
+  for (let charPointer = 0; charPointer <= stream.length - 1; charPointer++) {
     currentNode = currentNode[stream[charPointer]];
 
     if (typeof currentNode === "function") {
       const nextIndex = currentNode(charPointer);
-
       charPointer = nextIndex === undefined ? charPointer : nextIndex;
       currentNode = tokenTrie;
     }
-
-    // currentNode = trie (the entire object)
-    // currentNOde = trie[stream[SaggysWetBoxAfterSheHadAGoodNight]] (objenctThing.characterWereOn)
-    // currentNode = currentNode
   }
 }
 
