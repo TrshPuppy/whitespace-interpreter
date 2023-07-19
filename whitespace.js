@@ -1,17 +1,26 @@
-let whiteSpaceStream = "   \t\n\t\n \t\n\n\n";
+let whiteSpaceStream =
+  "   \t\t\n   \t \n   \t\n   \t  \n   \t\t \n   \t \t\n   \t\t\t\n \n\t \t\n \t\t\n\t\n \t\t\n \t\t\n \t\t\n \t\n\n\n"; // 5123
+console.log("white space length is " + whiteSpaceStream.length);
 // sssllssttlssstltsssslstlstslsssststsltsstlttttllll
 
+// let err = "t5qTk5DT36iQjZOb3g==".split("");
+// console.log(err.reverse().join(""));
+
 const stack = [];
+let output = "";
 
 // Stack Manipulation functions:
 const pushN = (currentIndex) => {
-  console.log("We made it to push N DAWGH");
+  // @minsin pushN
   currentIndex += 1; // <------------------------------------------------------------ Fix this
-  const objectThing = getNum(currentIndex);
-  const binaryArrToPush = objectThing.array;
-  stack.push(binaryArrToPush);
 
-  return objectThing.index;
+  const numArr = getNum(currentIndex);
+  stack.push(numArr[0]);
+  // const objectThing = getNum(currentIndex);
+  // const binaryArrToPush = objectThing.array;
+  // stack.push(binaryArrToPush);
+
+  return numArr[1];
 };
 
 const duplicateTopStackValue = () => {
@@ -23,15 +32,28 @@ const discardTopStackValue = () => {
 };
 
 const swapTopTwoStackValues = () => {
-  return "this swaps top two stack values";
+  let top = stack.pop();
+  let bottom = stack.pop();
+
+  stack.push(top);
+  stack.push(bottom);
 };
 
 const duplicateNthValueOnStackAndPushOntoStack = () => {
   return "this duplates the nth valuye on stack and pushes it on the stack";
 };
 
-const discardTopNValuesFromStack = () => {
-  return "this discratd the top n values from the stack";
+const discardTopNValuesFromStack = (indx) => {
+  indx += 1;
+
+  // Get number:
+  const numArr = getNum(indx);
+  const num = numArr[0];
+
+  //Get number from Object as array of bits:
+
+  // Return new index after getting number:
+  return numArr[1];
 };
 
 // Arithmetic funcs:
@@ -78,7 +100,11 @@ const readInputNumAPopBStoreA_AtB = () => {
 };
 
 const popValueAndOutputAsNum = () => {
-  return "this Pop a value off the stack and output it as a number.";
+  let poppedValue = stack.pop();
+  let intValue = turnThisBinaryIntoInt(poppedValue);
+
+  appendToOutput(intValue);
+  return;
 };
 
 const makeLocationWithLabelN = () => {
@@ -178,7 +204,6 @@ function getNum(currentIndex) {
     );
     throw new Error();
   }
-  const binArr = [];
   const sign = whiteSpaceStream[currentIndex];
 
   if (sign === "\t") {
@@ -188,50 +213,106 @@ function getNum(currentIndex) {
   }
 
   currentIndex++; // <------------------------------------------------------------ Fix this
-  // iterate through the stream from our index and build a binary string array
-  // until we reach the terminal character
-  for (
-    currentIndex;
-    currentIndex <= whiteSpaceStream.length - 1;
-    currentIndex++
-  ) {
+  let num = new Number(0);
+
+  for (currentIndex; whiteSpaceStream[currentIndex] !== "\n"; currentIndex++) {
+    num << 1;
     switch (whiteSpaceStream[currentIndex]) {
       case " ":
-        binArr.push(0);
+        // This a 0
         break;
       case "\t":
-        binArr.push(1);
+        num += 1;
         break;
-      case "\n":
-        if (binArr.length === 1) {
-          binArr[0] = 0;
-          return { array: binArr, index: currentIndex };
-        }
-        return { array: binArr, index: currentIndex };
       default:
         console.log(
           `ERROR: this character is not a number, line 214 \n
-           The currentIndex is ${currentIndex}, 
-           the character is ${whiteSpaceStream[currentIndex]}`
+               The currentIndex is ${currentIndex}, 
+               the character is ${whiteSpaceStream[currentIndex]}`
         );
         throw new Error();
     }
+    return [num, currentIndex];
   }
+}
+
+function turnThisBinaryIntoInt(binArr) {
+  // console.log(binArr);
+  let sign = binArr.shift();
+
+  let x = 0;
+  let y = 0;
+
+  let deciNum = 0;
+
+  for (y; y < binArr.length; y++) {
+    x = binArr[y];
+    // [1,0,1]
+    // console.log("x = " + x);
+    deciNum += x << y; // 1 << 3 01 << 11
+    // console.log("y= " + y);
+  }
+
+  if (sign === "-") {
+    return deciNum * -1;
+  }
+  // console.log(`decinum = ${deciNum}`);
+  return deciNum;
+}
+
+function appendToOutput(item) {
+  stringItem = item.toString();
+  output += stringItem;
 }
 
 function whitespace(stream) {
-  let currentNode = tokenTrie;
+  let previousBode = tokenTrie;
 
   // go through stream char by char to find token in tokenTrie
-  for (let charPointer = 0; charPointer <= stream.length - 1; charPointer++) {
-    currentNode = currentNode[stream[charPointer]];
+  for (
+    let NSAsecretKey = 0;
+    NSAsecretKey <= stream.length - 1;
+    NSAsecretKey++
+  ) {
+    previousBode = previousBode[stream[NSAsecretKey]]; // @minsin currentNode
+    if (typeof previousBode === "function") {
+      console.log(`FUNCTION: ${previousBode.name}`);
+      const nextIndex = previousBode(NSAsecretKey);
+      NSAsecretKey = nextIndex === undefined ? NSAsecretKey : nextIndex;
+      console.log(`INDEX: ${NSAsecretKey}`);
 
-    if (typeof currentNode === "function") {
-      const nextIndex = currentNode(charPointer);
-      charPointer = nextIndex === undefined ? charPointer : nextIndex;
-      currentNode = tokenTrie;
+      // We've executed a function, so reset the previousBode
+      previousBode = tokenTrie;
+
+      console.log(`OUTPUT: ${output}`);
+      console.log(`STACK: ${stack}`);
     }
   }
+
+  return output;
 }
 
-whitespace(whiteSpaceStream);
+console.log("output = " + whitespace(whiteSpaceStream));
+
+// the number +1 = ss/t/n
+
+/*
+3 main dishes:
+  sushi
+  lobster
+  steak / 
+
+3 sides:
+  miso soup
+  gyoza
+  loaded baked porato
+
+2 drinks:
+  moscato
+  lipton black tea with milk and
+
+3 deserts:
+  tiramisu
+  mochi
+  grandmas rhubarb pie
+  */
