@@ -204,12 +204,10 @@ function getNum(currentIndex) {
     );
     throw new Error();
   }
-  const sign = whiteSpaceStream[currentIndex];
+  let sign = 1;
 
   if (sign === "\t") {
-    binArr.push("-");
-  } else {
-    binArr.push("+");
+    sign *= -1;
   }
 
   currentIndex++; // <------------------------------------------------------------ Fix this
@@ -232,7 +230,7 @@ function getNum(currentIndex) {
         );
         throw new Error();
     }
-    return [num, currentIndex];
+    return [num * sign, currentIndex];
   }
 }
 
@@ -295,24 +293,3 @@ function whitespace(stream) {
 console.log("output = " + whitespace(whiteSpaceStream));
 
 // the number +1 = ss/t/n
-
-/*
-3 main dishes:
-  sushi
-  lobster
-  steak / 
-
-3 sides:
-  miso soup
-  gyoza
-  loaded baked porato
-
-2 drinks:
-  moscato
-  lipton black tea with milk and
-
-3 deserts:
-  tiramisu
-  mochi
-  grandmas rhubarb pie
-  */
